@@ -31,6 +31,30 @@ bun run demo --scenario rollback
 
 `invalid_leg` rejects the ticket when its second market becomes ineligible. `rollback` injects a failure after the first leg is written and verifies that funding and position creation roll back together.
 
+## Folder guide
+
+Start with [src/engine.ts](src/engine.ts), the public API. It delegates to the feature handlers, which share one command executor and SQLite transaction boundary: state, money movements, events, and retry receipts commit together.
+
+```text
+src/
+  engine.ts           Public API and module wiring
+  application/        Shared context, command receipts, and queries
+  domain/             Types, financial rules, and input validation
+  rfq/                Requests, quotes, maker selection, and acceptance
+  resolution/         Oracle proposals, disputes, and settlement
+  storage/            SQLite schema, transactions, and ledger
+  recovery/           Expiry cleanup, overdue resolution, and settlement
+  audit/              Checks on balances, collateral, and payouts
+  markets/            Trading halts
+  integrations/hip4/  Market identities and metadata validation
+examples/             Runnable end-to-end scenarios
+fixtures/             Pinned market data for offline runs
+tests/                Tests grouped by feature
+docs/                 The four PDF deliverables
+```
+
+To follow the money, read [quote reservation](src/rfq/quotes.ts), [acceptance](src/rfq/acceptance.ts), then [settlement](src/resolution/settlement.ts).
+
 ## Deliverables
 
 - [State machine](docs/state-machine.pdf)
