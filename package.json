@@ -1,0 +1,23 @@
+{
+  "name": "outcome-rfq-bun",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Whole-parlay RFQ matching and settlement, implemented in TypeScript on Bun.",
+  "engines": {
+    "bun": ">=1.2.8"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "demo": "bun run examples/demo.ts",
+    "check": "bun run typecheck && bun test && bun run demo",
+    "format": "prettier --write src examples tests *.json",
+    "format:check": "prettier --check src examples tests *.json"
+  },
+  "devDependencies": {
+    "@types/bun": "1.2.8",
+    "prettier": "3.5.3",
+    "typescript": "5.8.3"
+  }
+}

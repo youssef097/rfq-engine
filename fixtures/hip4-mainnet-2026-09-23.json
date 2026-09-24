@@ -1,0 +1,177 @@
+{
+  "capturedAt": "2026-09-23T14:54:10.401Z",
+  "network": "mainnet",
+  "endpoint": "https://api.hyperliquid.xyz/info",
+  "request": {
+    "type": "outcomeMeta"
+  },
+  "responseSha256": "460d574e29980406b7516e4f29f31e801eda94dff8cb59fe92ab39d049a416b4",
+  "selectionNote": "Exact selected rows from public metadata, not a live execution feed or known final outcomes.",
+  "outcomes": [
+    {
+      "outcome": 1209,
+      "name": "template:priceTouch",
+      "description": "perp:HYPE|priceDescription:HYPE-USDC perp mark |seconds:1|target:100|time:20261001-0000",
+      "sideSpecs": [
+        {
+          "name": "template:Yes"
+        },
+        {
+          "name": "template:No"
+        }
+      ],
+      "quoteToken": "USDC",
+      "venue": "out",
+      "deployerFeeScale": "1.0"
+    },
+    {
+      "outcome": 1210,
+      "name": "template:binaryPrice",
+      "description": "perp:BTC|priceDescription:BTC-USDC mark|seconds:1|threshold:100000|time:20261001-0000",
+      "sideSpecs": [
+        {
+          "name": "template:Yes"
+        },
+        {
+          "name": "template:No"
+        }
+      ],
+      "quoteToken": "USDC",
+      "venue": "out",
+      "deployerFeeScale": "1.0"
+    },
+    {
+      "outcome": 1211,
+      "name": "template:priceTouch",
+      "description": "perp:BTC|priceDescription:BTC-USDC mark|seconds:1|target:100000|time:20261001-0000",
+      "sideSpecs": [
+        {
+          "name": "template:Yes"
+        },
+        {
+          "name": "template:No"
+        }
+      ],
+      "quoteToken": "USDC",
+      "venue": "out",
+      "deployerFeeScale": "1.0"
+    },
+    {
+      "outcome": 1472,
+      "name": "template fallback",
+      "description": "other",
+      "sideSpecs": [
+        {
+          "name": "Yes"
+        },
+        {
+          "name": "No"
+        }
+      ],
+      "quoteToken": "USDC",
+      "venue": "out",
+      "deployerFeeScale": "1.0"
+    },
+    {
+      "outcome": 1473,
+      "name": "template:sportsTournamentParticipant",
+      "description": "participant:Arsenal",
+      "sideSpecs": [
+        {
+          "name": "Yes"
+        },
+        {
+          "name": "No"
+        }
+      ],
+      "quoteToken": "USDC",
+      "venue": "out",
+      "deployerFeeScale": "1.0"
+    },
+    {
+      "outcome": 1474,
+      "name": "template:sportsTournamentParticipant",
+      "description": "participant:Manchester City",
+      "sideSpecs": [
+        {
+          "name": "Yes"
+        },
+        {
+          "name": "No"
+        }
+      ],
+      "quoteToken": "USDC",
+      "venue": "out",
+      "deployerFeeScale": "1.0"
+    },
+    {
+      "outcome": 4513,
+      "name": "template:sportsContestWinner",
+      "description": "competition:NFL|contestType:Match|countedPlay:the full game including overtime|officialSource:National Football League (NFL)|participantA:Green Bay Packers|participantB:Atlanta Falcons|resolutionDeadline:20260926-0015|scheduledStart:20260925-0015|season:2026|shortNameA:GB|shortNameB:ATL|sport:Football|stage:Regular Season",
+      "sideSpecs": [
+        {
+          "name": "template:{shortNameA}"
+        },
+        {
+          "name": "template:{shortNameB}"
+        }
+      ],
+      "quoteToken": "USDC",
+      "venue": "out",
+      "deployerFeeScale": "1.0"
+    },
+    {
+      "outcome": 4926,
+      "name": "template:binaryPrice",
+      "description": "perp:xyz:MU|priceDescription:1-minute candle|seconds:300|threshold:1190|time:20261001-1335",
+      "sideSpecs": [
+        {
+          "name": "template:Yes"
+        },
+        {
+          "name": "template:No"
+        }
+      ],
+      "quoteToken": "USDC",
+      "venue": "txyz"
+    }
+  ],
+  "questions": [
+    {
+      "question": 198,
+      "name": "template:sportsTournamentWinner",
+      "description": "competition:English Premier League|officialSource:English Premier League|resolutionDeadline:20270605-1200|season:2026/2027|sport:football/soccer",
+      "fallbackOutcome": 1472,
+      "namedOutcomes": [
+        1473,
+        1474,
+        1475,
+        1476,
+        1477,
+        1478
+      ],
+      "settledNamedOutcomes": []
+    }
+  ],
+  "feeScale": "1.0",
+  "quoteAsset": {
+    "request": {
+      "type": "spotMeta"
+    },
+    "responseSha256": "a84545ef4addc99185c5124f216902af6375ea43e8c64637bb546e3738863fc5",
+    "token": {
+      "name": "USDC",
+      "szDecimals": 8,
+      "weiDecimals": 8,
+      "index": 0,
+      "tokenId": "0x6d1e7cde53ba9467b783cb7c530ce054",
+      "isCanonical": true,
+      "evmContract": {
+        "address": "0x6b9e773128f453f5c2c60935ee2de2cbc5390a24",
+        "evm_extra_wei_decimals": -2
+      },
+      "fullName": null,
+      "deployerTradingFeeShare": "0.0"
+    }
+  }
+}
