@@ -4,7 +4,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Engine } from "../../src/engine";
 import { DomainError, ManualClock, quotePrice } from "../../src/domain/index";
-import { ResolutionService } from "../../src/resolution";
+import {
+  proposeResult,
+  disputeResult,
+  finalizeResult,
+  arbitrateResult,
+  settle,
+} from "../../src/resolution";
 import type { ResolutionResult } from "../../src/resolution";
 import { balance, escrow } from "../../src/storage/index";
 import type { Position } from "../../src/domain/types";
@@ -485,7 +491,6 @@ describe("whole-ticket resolution", () => {
         throw new Error("must validate before command");
       },
     } as unknown as ResolutionHost;
-    const service = new ResolutionService(host);
     const accessorArgs = {
       get marketId(): string {
         throw new Error("accessor must never be invoked");
@@ -494,51 +499,50 @@ describe("whole-ticket resolution", () => {
       evidence: "source",
     };
     const cases: (() => unknown)[] = [
-      () => service.proposeResult("actor", command(), null as never),
-      () => service.proposeResult("actor", command(), accessorArgs),
+      () => proposeResult(host, "actor", command(), null as never),
+      () => proposeResult(host, "actor", command(), accessorArgs),
       () =>
-        service.proposeResult("actor", command(), {
+        proposeResult(host, "actor", command(), {
           marketId: "x".repeat(65),
           result: "YES",
           evidence: "source",
         }),
       () =>
-        service.proposeResult("actor", command(), {
+        proposeResult(host, "actor", command(), {
           marketId: "market0",
           result: {} as never,
           evidence: "source",
         }),
       () =>
-        service.proposeResult("actor", command(), {
+        proposeResult(host, "actor", command(), {
           marketId: "market0",
           result: "YES",
           evidence: "x".repeat(4097),
         }),
       () =>
-        service.disputeResult("actor", command(), {
+        disputeResult(host, "actor", command(), {
           marketId: "market0",
           reason: {} as never,
         }),
+      () => finalizeResult(host, "actor", command(), { marketId: {} as never }),
       () =>
-        service.finalizeResult("actor", command(), { marketId: {} as never }),
-      () =>
-        service.finalizeResult("actor", command(), {
+        finalizeResult(host, "actor", command(), {
           marketId: "market0",
           unexpected: true,
         } as never),
       () =>
-        service.arbitrateResult("actor", command(), {
+        arbitrateResult(host, "actor", command(), {
           marketId: "market0",
           result: {} as never,
           evidence: "source",
         }),
       () =>
-        service.arbitrateResult("actor", command(), {
+        arbitrateResult(host, "actor", command(), {
           marketId: "market0",
           result: "YES",
           evidence: {} as never,
         }),
-      () => service.settle("actor", command(), { positionId: {} as never }),
+      () => settle(host, "actor", command(), { positionId: {} as never }),
     ];
     const before = engine.snapshot();
     for (const run of cases) domainError("INVALID_INPUT", run);

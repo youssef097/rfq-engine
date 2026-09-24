@@ -6,10 +6,11 @@ import {
   boundedText,
   identifier,
   integer,
+  objectInput,
 } from "../domain/index";
 import type { Market } from "../domain/types";
 import { readMarket } from "./market-state";
-import { fields, result } from "./validation";
+import { result } from "./validation";
 import type {
   ProposeResultArgs,
   ProposeHip4ResultArgs,
@@ -23,10 +24,10 @@ export function proposeResult(
   commandId: string,
   args: ProposeResultArgs,
 ): Market {
-  const raw = fields(args, ["marketId", "result", "evidence"]);
-  const marketId = identifier(raw.marketId, "marketId");
-  const outcome = result(raw.result);
-  const evidence = boundedText(raw.evidence, "evidence", 4096);
+  objectInput(args, ["marketId", "result", "evidence"]);
+  const marketId = identifier(args.marketId, "marketId");
+  const outcome = result(args.result);
+  const evidence = boundedText(args.evidence, "evidence", 4096);
   const payload = {
     op: "proposeResult",
     marketId,
@@ -51,7 +52,7 @@ export function proposeHip4Result(
   commandId: string,
   args: ProposeHip4ResultArgs,
 ): Market {
-  const raw = fields(args, [
+  objectInput(args, [
     "network",
     "outcome",
     "settleFraction",
@@ -59,28 +60,28 @@ export function proposeHip4Result(
     "sideNames",
     "evidence",
   ]);
-  if (raw.network !== "mainnet" && raw.network !== "testnet") {
+  if (args.network !== "mainnet" && args.network !== "testnet") {
     throw new DomainError("INVALID_INPUT", "Invalid HIP-4 network");
   }
-  const network = raw.network;
-  const outcome = integer(raw.outcome, "outcome", 0, Number.MAX_SAFE_INTEGER);
+  const network = args.network;
+  const outcome = integer(args.outcome, "outcome", 0, Number.MAX_SAFE_INTEGER);
   hip4Side(outcome, 1); // Reject an ID whose exchange encoding loses precision.
   const marketId = `hip4:${network}:${outcome}`;
-  const resolution = binaryResultFromFraction(raw.settleFraction);
-  const settleFraction = raw.settleFraction as string;
-  arrayInput(raw.nameAndDescription, "nameAndDescription", 2, 2);
-  const name = boundedText(raw.nameAndDescription[0], "Outcome name", 512);
-  const description = raw.nameAndDescription[1];
+  const resolution = binaryResultFromFraction(args.settleFraction);
+  const settleFraction = args.settleFraction;
+  arrayInput(args.nameAndDescription, "nameAndDescription", 2, 2);
+  const name = boundedText(args.nameAndDescription[0], "Outcome name", 512);
+  const description = args.nameAndDescription[1];
   // Native descriptions may be empty; otherwise preserve every raw character.
   if (typeof description !== "string" || description.length > 16_384) {
     throw new DomainError("INVALID_INPUT", "Invalid outcome description");
   }
-  arrayInput(raw.sideNames, "sideNames", 2, 2);
+  arrayInput(args.sideNames, "sideNames", 2, 2);
   const sideNames: [string, string] = [
-    boundedText(raw.sideNames[0], "Side name", 512),
-    boundedText(raw.sideNames[1], "Side name", 512),
+    boundedText(args.sideNames[0], "Side name", 512),
+    boundedText(args.sideNames[1], "Side name", 512),
   ];
-  const evidence = boundedText(raw.evidence, "evidence", 4096);
+  const evidence = boundedText(args.evidence, "evidence", 4096);
   const observation: ProposeHip4ResultArgs = {
     network,
     outcome,

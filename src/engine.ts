@@ -19,7 +19,14 @@ import type {
   AcceptArgs,
 } from "./rfq/types";
 import {
-  ResolutionService,
+  proposeResult,
+  proposeHip4Result,
+  disputeResult,
+  finalizeResult,
+  finalizeMarket,
+  arbitrateResult,
+  settle,
+  settlePosition,
   type ProposeResultArgs,
   type ProposeHip4ResultArgs,
   type DisputeResultArgs,
@@ -34,44 +41,25 @@ export type {
   RequestArgs,
   AcceptArgs,
 } from "./rfq/types";
-export { requestCommitment } from "./rfq/commitment";
 
 /** Trusted local authority. Actor strings are mocked, already-authenticated identities. */
 export class Engine {
   private readonly context: CommandContext;
   private readonly queries: Queries;
   private readonly lifecycle: RfqLifecycle;
-  private readonly resolution: ResolutionService;
   constructor(options: EngineOptions = {}) {
     this.context = new CommandContext(options);
     this.queries = new Queries(this.context.store, this.context.records);
     this.lifecycle = new RfqLifecycle(this.context);
-    this.resolution = new ResolutionService(this.context);
   }
   close(): void {
     this.store.close();
-  }
-  /** Privileged composition hooks retained for callers of the original local API. */
-  fault(stage: string): void {
-    this.context.fault(stage);
-  }
-  event(
-    now: number,
-    kind: string,
-    id: string,
-    type: string,
-    payload: unknown,
-  ): void {
-    this.context.event(now, kind, id, type, payload);
-  }
-  readPosition(id: string) {
-    return this.context.readPosition(id);
   }
   /** Privileged diagnostic access; never expose this through an untrusted transport. */
   get store() {
     return this.context.store;
   }
-  /** Retained test/composition hook; domain consumers use named commands below. */
+  /** Trusted hook for command-boundary tests; application callers use named commands. */
   command<T>(
     actor: string,
     commandId: string,
@@ -85,16 +73,7 @@ export class Engine {
     markets: MarketInput[],
     operator = "operator",
   ): void {
-    bootstrapFixture(
-      {
-        store: this.store,
-        clock: this.context.clock,
-        event: (...args) => this.context.event(...args),
-      },
-      balances,
-      markets,
-      operator,
-    );
+    bootstrapFixture(this.context, balances, markets, operator);
   }
   createRequest(actor: string, commandId: string, args: CreateRequestArgs) {
     return createRequest(this.context, actor, commandId, args);
@@ -141,8 +120,8 @@ export class Engine {
               "EXPIRED",
               at,
             ),
-          finalizeMarket: (id, at) => this.resolution.finalizeMarket(id, at),
-          settlePosition: (id, at) => this.resolution.settlePosition(id, at),
+          finalizeMarket: (id, at) => finalizeMarket(this.context, id, at),
+          settlePosition: (id, at) => settlePosition(this.context, id, at),
         },
         now,
         limit,
@@ -150,26 +129,26 @@ export class Engine {
     );
   }
   proposeResult(actor: string, commandId: string, args: ProposeResultArgs) {
-    return this.resolution.proposeResult(actor, commandId, args);
+    return proposeResult(this.context, actor, commandId, args);
   }
   proposeHip4Result(
     actor: string,
     commandId: string,
     args: ProposeHip4ResultArgs,
   ) {
-    return this.resolution.proposeHip4Result(actor, commandId, args);
+    return proposeHip4Result(this.context, actor, commandId, args);
   }
   disputeResult(actor: string, commandId: string, args: DisputeResultArgs) {
-    return this.resolution.disputeResult(actor, commandId, args);
+    return disputeResult(this.context, actor, commandId, args);
   }
   finalizeResult(actor: string, commandId: string, args: FinalizeResultArgs) {
-    return this.resolution.finalizeResult(actor, commandId, args);
+    return finalizeResult(this.context, actor, commandId, args);
   }
   arbitrateResult(actor: string, commandId: string, args: ArbitrateResultArgs) {
-    return this.resolution.arbitrateResult(actor, commandId, args);
+    return arbitrateResult(this.context, actor, commandId, args);
   }
   settle(actor: string, commandId: string, args: SettleArgs) {
-    return this.resolution.settle(actor, commandId, args);
+    return settle(this.context, actor, commandId, args);
   }
   request(id: string) {
     return this.queries.request(id);

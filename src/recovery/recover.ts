@@ -3,7 +3,7 @@ import { DomainError, integer, invariant } from "../domain/index";
 import type { SqlScalar, Store } from "../storage/index";
 import type { RecoveryResult } from "../domain/types";
 
-export interface RecoveryHost {
+interface RecoveryHost {
   readonly store: Store;
   refreshRequest(id: string, now: number): void;
   expireQuote(id: string, now: number): void;

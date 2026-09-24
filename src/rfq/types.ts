@@ -1,3 +1,5 @@
+import type { Selection } from "../domain/types";
+
 export interface CreateRequestArgs {
   nonce: string;
   legs: Selection[];
@@ -18,4 +20,3 @@ export interface RequestArgs {
 export interface AcceptArgs extends RequestArgs {
   quoteId: string;
 }
-import type { Selection } from "../domain/types";

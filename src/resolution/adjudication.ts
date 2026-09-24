@@ -1,8 +1,13 @@
 /** Disputes, arbitration and deadline finality do not move collateral. */
-import { DomainError, boundedText, identifier } from "../domain/index";
+import {
+  DomainError,
+  boundedText,
+  identifier,
+  objectInput,
+} from "../domain/index";
 import type { Market } from "../domain/types";
 import { readMarket, recordFinalResult } from "./market-state";
-import { fields, result } from "./validation";
+import { result } from "./validation";
 import type {
   ArbitrateResultArgs,
   DisputeResultArgs,
@@ -16,9 +21,9 @@ export function disputeResult(
   commandId: string,
   args: DisputeResultArgs,
 ): Market {
-  const raw = fields(args, ["marketId", "reason"]);
-  const marketId = identifier(raw.marketId, "marketId");
-  const reason = boundedText(raw.reason, "reason", 1024);
+  objectInput(args, ["marketId", "reason"]);
+  const marketId = identifier(args.marketId, "marketId");
+  const reason = boundedText(args.reason, "reason", 1024);
   return host.command(
     actor,
     commandId,
@@ -102,8 +107,8 @@ export function finalizeResult(
   commandId: string,
   args: FinalizeResultArgs,
 ): Market {
-  const raw = fields(args, ["marketId"]);
-  const marketId = identifier(raw.marketId, "marketId");
+  objectInput(args, ["marketId"]);
+  const marketId = identifier(args.marketId, "marketId");
   return host.command(
     actor,
     commandId,
@@ -128,10 +133,10 @@ export function arbitrateResult(
   commandId: string,
   args: ArbitrateResultArgs,
 ): Market {
-  const raw = fields(args, ["marketId", "result", "evidence"]);
-  const marketId = identifier(raw.marketId, "marketId");
-  const outcome = result(raw.result);
-  const evidence = boundedText(raw.evidence, "evidence", 4096);
+  objectInput(args, ["marketId", "result", "evidence"]);
+  const marketId = identifier(args.marketId, "marketId");
+  const outcome = result(args.result);
+  const evidence = boundedText(args.evidence, "evidence", 4096);
   return host.command(
     actor,
     commandId,

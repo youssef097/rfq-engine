@@ -1,7 +1,8 @@
 import type { Store } from "../storage/index";
-import type { Position } from "../domain/types";
+import type { Outcome, Position } from "../domain/types";
+import type { Hip4Network } from "../domain/hip4-binding";
 
-export type ResolutionResult = "YES" | "NO" | "VOID";
+export type ResolutionResult = Outcome;
 export interface ProposeResultArgs {
   marketId: string;
   result: ResolutionResult;
@@ -9,7 +10,7 @@ export interface ProposeResultArgs {
 }
 /** Trusted mock observation; this is not a signed native settlement action. */
 export interface ProposeHip4ResultArgs {
-  network: "mainnet" | "testnet";
+  network: Hip4Network;
   outcome: number;
   settleFraction: string;
   nameAndDescription: [string, string];

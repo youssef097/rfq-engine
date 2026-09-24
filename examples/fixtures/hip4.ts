@@ -100,7 +100,7 @@ invariant(
   "Quote asset differs from captured metadata",
 );
 
-export const DEMO_OUTCOMES = [1209, 1210, 1211] as const;
+const DEMO_OUTCOMES = [1209, 1210, 1211] as const;
 export const DEMO_MARKET_IDS = DEMO_OUTCOMES.map(
   (outcome) => `hip4:mainnet:${outcome}`,
 ) as [string, string, string];

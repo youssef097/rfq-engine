@@ -1,7 +1,7 @@
 /** Storage's named interface; implementation modules do not import this barrel. */
-export { Store, SCHEMA_VERSION } from "./store";
-export type { SqlScalar, RunResult } from "./rows";
-export { diskJournalMode, type DiskJournalMode } from "./journal-mode";
+export { Store } from "./store";
+export type { SqlScalar } from "./rows";
+export { diskJournalMode } from "./journal-mode";
 export {
   available,
   reserved,

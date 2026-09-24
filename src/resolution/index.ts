@@ -1,4 +1,11 @@
-export { ResolutionService } from "./service";
+export { proposeResult, proposeHip4Result } from "./proposals";
+export {
+  disputeResult,
+  finalizeResult,
+  finalizeMarket,
+  arbitrateResult,
+} from "./adjudication";
+export { settle, settlePosition } from "./settlement";
 export type {
   ArbitrateResultArgs,
   DisputeResultArgs,

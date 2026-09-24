@@ -1,8 +1,7 @@
 /** Whole-ticket payout stays in one visible, synchronous transaction body. */
-import { DomainError, identifier } from "../domain/index";
+import { DomainError, identifier, objectInput } from "../domain/index";
 import { available, balance, escrow, transfer } from "../storage/index";
 import type { Position } from "../domain/types";
-import { fields } from "./validation";
 import type { ResolutionHost, ResolutionResult, SettleArgs } from "./types";
 
 interface SettlementLeg {
@@ -128,8 +127,8 @@ export function settle(
   commandId: string,
   args: SettleArgs,
 ): Position {
-  const raw = fields(args, ["positionId"]);
-  const positionId = identifier(raw.positionId, "positionId");
+  objectInput(args, ["positionId"]);
+  const positionId = identifier(args.positionId, "positionId");
   return host.command(actor, commandId, { op: "settle", positionId }, (now) =>
     settlePosition(host, positionId, now),
   );

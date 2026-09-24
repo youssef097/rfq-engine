@@ -80,7 +80,7 @@ export class CommandExecutor {
           "Command action returned a thenable",
         );
       }
-      const receipt = encode(value); // Thenables/Promises fail before commit as unsupported objects.
+      const receipt = encode(value);
       this.store.run(
         "UPDATE meta SET value=? WHERE key='last_now'",
         String(now),

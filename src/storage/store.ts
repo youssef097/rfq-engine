@@ -13,7 +13,7 @@ import {
   type SqlScalar,
 } from "./rows";
 
-export const SCHEMA_VERSION = "bun-3";
+const SCHEMA_VERSION = "bun-3";
 const schema = readFileSync(new URL("./schema.sql", import.meta.url), "utf8");
 
 interface TransactionScope {

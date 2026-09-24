@@ -19,7 +19,7 @@ import {
   decode,
   quotePrice,
 } from "../../src/domain/index";
-import { ResolutionService } from "../../src/resolution";
+import { proposeHip4Result } from "../../src/resolution";
 import type { ProposeHip4ResultArgs } from "../../src/resolution";
 import type { Position } from "../../src/domain/types";
 import type { ResolutionHost } from "../../src/resolution";
@@ -400,11 +400,11 @@ describe("HIP-4 observation boundary", () => {
 
   test("bounded dense raw tuples reject accessors without invoking them or the command boundary", () => {
     let invoked = false;
-    const service = new ResolutionService({
+    const host = {
       command: () => {
         throw new Error("Invalid input reached command serialization");
       },
-    } as unknown as ResolutionHost);
+    } as unknown as ResolutionHost;
     const invalid: unknown[] = [
       { ...observation(), nameAndDescription: ["name"] },
       { ...observation(), nameAndDescription: ["name", "x".repeat(16_385)] },
@@ -435,7 +435,8 @@ describe("HIP-4 observation boundary", () => {
     invalid.push(args);
     for (const value of invalid)
       domainError("INVALID_INPUT", () =>
-        service.proposeHip4Result(
+        proposeHip4Result(
+          host,
           "oracle",
           "invalid",
           value as ProposeHip4ResultArgs,

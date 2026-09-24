@@ -15,7 +15,6 @@ export type {
   FinalizeResultArgs,
   ArbitrateResultArgs,
   SettleArgs,
-  ResolutionHost,
 } from "./resolution";
 export {
   hip4Side,
